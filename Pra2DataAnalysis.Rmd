@@ -6,14 +6,6 @@ output:
   pdf_document:
     toc: yes
     toc_depth: '2'
-  html_document:
-    highlight: default
-    number_sections: no
-    theme: cosmo
-    toc: yes
-    toc_depth: 2
-    includes:
-      in_header: PEC-header.html
 ---
 
 ```{r setup, include=FALSE}
