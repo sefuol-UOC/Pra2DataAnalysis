@@ -1,0 +1,18 @@
+---
+title: "Pra2DataAnalysis"
+author: "Author"
+date: "5/6/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Limpieza de los datos
+
+```{r cars}
+data <- read.csv("recruitment_decision_tree.csv", header = TRUE)
+```
+
+
