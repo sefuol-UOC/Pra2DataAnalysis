@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Limpieza de los datos
 
 ```{r}
-data <- read.csv("recruitment_decision_tree.csv", header = TRUE)
+data <- read.csv("recruitment_decision_tree.csv", header = TRUE, stringsAsFactors = TRUE)
 head(data)
 ```
 
