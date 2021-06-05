@@ -1,15 +1,33 @@
 ---
-title: "Pra2DataAnalysis"
-author: "Author"
-date: "5/6/2021"
-output: html_document
+title: 'PRA2 - Tipología y ciclo de vida de los datos: Limpieza y análisis de datos'
+author: "Sergio Funes, David Ortiz"
+date: "Junio de 2021"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+  html_document:
+    highlight: default
+    number_sections: no
+    theme: cosmo
+    toc: yes
+    toc_depth: 2
+    includes:
+      in_header: PEC-header.html
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(eval=T, echo=T)
 ```
 
-## Limpieza de los datos
+```{r, include=FALSE}
+library(VIM)
+```
+
+# 1. Descripción del dataset
+
+
+# 2. Integración y selección de los datos de interés
 
 ```{r}
 data <- read.csv("recruitment_decision_tree.csv", header = TRUE, stringsAsFactors = TRUE)
@@ -20,13 +38,14 @@ head(data)
 sapply(data, function(x) class(x))
 ```
 
-## Selección de los datos de interés
-
 ```{r}
 data <- data[, -(1)]
 ```
 
-## Ceros y elementos vacíos
+
+# 3. Limpieza de los datos
+
+## 3.1. Ceros y elementos vacíos
 
 ```{r}
 sapply(data, function(x) sum(is.na(x)))
@@ -42,12 +61,13 @@ data$Offer_History <- kNN(data)$Offer_History
 sapply(data, function(x) sum(is.na(x)))
 ```
 
-## Valores extremos
+## 3.2. Valores extremos
 
 ```{r}
 boxplot(data$Score)
 boxplot.stats(data$Score)$out
 ```
+
 ```{r}
 data$Score[data$Score > 23000] <- NA
 
@@ -69,8 +89,24 @@ data$Salary...10E4 <- kNN(data)$Salary...10E4
 boxplot(data$Salary...10E4)
 ```
 
-## Exportación de los datos preprocesados
+## 3.3. Exportación de los datos preprocesados
 
 ```{r}
 write.csv(data, "recruitment_decision_tree_clean.csv")
 ```
+
+
+# 4. Análisis de los datos
+
+## 4.1. Selección de datos
+
+## 4.2. Comprobación de normalidad y homogeneidad de la varianza
+
+
+# 5. Representación de resultados
+
+
+# 6. Resolución y conclusiones
+
+
+# 7. Código
