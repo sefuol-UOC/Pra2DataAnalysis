@@ -48,11 +48,25 @@ sapply(data, function(x) sum(is.na(x)))
 boxplot(data$Score)
 boxplot.stats(data$Score)$out
 ```
+```{r}
+data$Score[data$Score > 23000] <- NA
 
+data$Score <- kNN(data)$Score
+
+boxplot(data$Score)
+```
 
 ```{r}
 boxplot(data$Salary...10E4)
 boxplot.stats(data$Salary...10E4)$out
+```
+
+```{r}
+data$Salary...10E4[data$Salary...10E4 > 500] <- NA
+
+data$Salary...10E4 <- kNN(data)$Salary...10E4
+
+boxplot(data$Salary...10E4)
 ```
 
 ## Exportación de los datos preprocesados
