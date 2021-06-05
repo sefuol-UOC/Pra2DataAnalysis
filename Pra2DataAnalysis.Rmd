@@ -94,6 +94,8 @@ write.csv(data, "recruitment_decision_tree_clean.csv")
 
 ## 4.2. Comprobación de normalidad y homogeneidad de la varianza
 
+## 4.3. Pruebas estadísticas
+
 
 # 5. Representación de resultados
 
