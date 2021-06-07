@@ -3,6 +3,9 @@ title: 'PRA2 - Tipología y ciclo de vida de los datos: Limpieza y análisis de 
 author: "Sergio Funes, David Ortiz"
 date: "Junio de 2021"
 output:
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
   html_document:
     toc: yes
     toc_depth: '2'
@@ -12,9 +15,6 @@ output:
     theme: cosmo
     includes:
       in_header: PRA_header.html
-  pdf_document:
-    toc: yes
-    toc_depth: '2'
 ---
 
 ```{r setup, include=FALSE}
@@ -299,7 +299,7 @@ summary(logistic_model)
 ```
 
 ```{r}
-python()
+#python()
 ```
 
 
@@ -310,3 +310,18 @@ python()
 
 
 # 7. Código
+
+
+```{r table-simple, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+require(pander)
+panderOptions('table.split.table', Inf)
+my.data <- "   Contribuciones | Firma
+  Investigación previa        | DO, SF         
+  Redacción de las respuestas | DO, SF
+  Desarrollo código           | DO, SF"
+df <- read.delim(textConnection(my.data),header=FALSE,sep="|",strip.white=TRUE,stringsAsFactors=FALSE)
+names(df) <- unname(as.list(df[1,])) # put headers on
+df <- df[-1,] # remove first row
+row.names(df)<-NULL
+pander(df, style = 'rmarkdown')
+```
