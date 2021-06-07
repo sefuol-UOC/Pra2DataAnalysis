@@ -298,10 +298,20 @@ logistic_model <- glm(formula=logistic_formula, data=data,
 summary(logistic_model)
 ```
 
+Sobre las variables estudiadas, se observa una gran significancia para el historial de ofertas laborales registrado, así como la localización, en el caso de que esta esté calificada como semiurbana. Por último, vemos una significancia menor, aunque no despreciable, de la experiencia de programación en Python. Podemos calcular las *Odds-Ratio* (OR), para comprobar cuál es el efecto de estas tres variables:
+
 ```{r}
-#python()
+## Odds-Ratio
+exp(coefficients(logistic_model))
 ```
 
+Vemos por tanto que respecto a la referencia multivariable tomada, vemos que corresponde al historial de ofertas laborales una probabilidad hasta 55 veces superior, por lo que supone un claro factor de riesgo en términos estadísticos. Por su parte, tener una localización semiurbana sería hasta 2,5 veces (+150%) más probable, de nuevo un factor de riesgo, para la contratación. Por su parte y sorprendentemente, contar con experiencia en Python reduce la probabilidad de contratación, para el conjunto de datos estudiado, en hasta un 43% respecto a los candidatos que no cuentan con ella, por lo que sería un factor de protección respecto a la contratación.
+
+
+| columna centrada | columna izquierda |
+| :-: | :- |
+| fila1 cc | fila1 ci |
+| fila2 cc | fila2 ci |
 
 # 5. Representación de resultados
 
