@@ -14,3 +14,4 @@ The activity has been carried out jointly by **Sergio Funes Olaria** and **David
 ## Resources
 
 1. _Recruitment data | Kaggle_ [online]. [cited 2021-07-06]. Avalable from: https://www.kaggle.com/rafunlearnhub/recruitment-data
+2. _Bengis/nba-gap-cleaning: Estadísticas de los jugadores y jugadoras de la NBA/WNBA_ [online]. [cited 2021-07-06]. Avalable from: https://github.com/Bengis/nba-gap-cleaning
