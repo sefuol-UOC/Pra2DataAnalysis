@@ -25,9 +25,11 @@ knitr::opts_chunk$set(eval=T, echo=T)
 library(VIM)
 ```
 
-# 1. Descripción del dataset
+# 1. Descripción del dataset y problema de interés
 
-El conjunto de datos es Dataset recruitment data [en Kaggle](https://www.kaggle.com/rafunlearnhub/recruitment-data). Está formado por 11 características que presentan 614 personas. Las características son las siguientes:
+El conjunto de datos es el 'Dataset recruitment data', disponible en el repositorio [en Kaggle](https://www.kaggle.com/rafunlearnhub/recruitment-data). Está formado por 11 características para un total de 614 personas, en un conjunto de datos que refleja el estado de contratación. Este conjunto de datos es interesante puesto que permite identificar las relaciones más directas con un proceso de contratación satisfactorio, lo que puede permitir actuar para mejorar las posibilidades de contratación, o simplemente para detectar relaciones entre distintos usuarios tipo y variables tan relevantes como el salario.
+
+Las características de las que dispone el conjunto de datos son las siguientes:
 
 * **Número de serie**. Número del registro.
 
@@ -55,6 +57,13 @@ A partir de este conjunto de datos, se pretende determinar que variables influye
 
 Este análisis adquiere importancia a la hora de reclutar nuevos empleados en una empresa principalmente de informática, ya que a partir de su experiencia de programación, su educación y su experiencia, tendremos una primera aproximación sobre si un empleado será contratado o no.
 
+Asímismo, durante la realización de esta práctica nos proponemos dar respuesta a tres preguntas principales:
+
+1. Si hay correlación entre la experiencia del usuario y la puntuación otorgada a cada uno de ellos y el salario que consigue.
+
+2. Si las mujeres cobran distinto a los hombres y si, en caso de hacerlo, su salario es inferior al de estos.
+
+3. Si hay factores de protección o riesgo importantes que afecten a la contratación y en qué grado.
 
 # 2. Integración y selección de los datos de interés
 
@@ -307,11 +316,8 @@ exp(coefficients(logistic_model))
 
 Vemos por tanto que respecto a la referencia multivariable tomada, vemos que corresponde al historial de ofertas laborales una probabilidad hasta 55 veces superior, por lo que supone un claro factor de riesgo en términos estadísticos. Por su parte, tener una localización semiurbana sería hasta 2,5 veces (+150%) más probable, de nuevo un factor de riesgo, para la contratación. Por su parte y sorprendentemente, contar con experiencia en Python reduce la probabilidad de contratación, para el conjunto de datos estudiado, en hasta un 43% respecto a los candidatos que no cuentan con ella, por lo que sería un factor de protección respecto a la contratación.
 
+Es interesante tener en cuenta que, tal y como se indicó en la descripción del problema, una vez construido este modelo, puede ser utilizado para predecir la contratación, o no, de candidatos a ofertas de empleo, basándonos en las variables utilizadas para su construcción: la educación, el tipo de localización, el historial de ofertas y la experiencia de programación en Python.
 
-| columna centrada | columna izquierda |
-| :-: | :- |
-| fila1 cc | fila1 ci |
-| fila2 cc | fila2 ci |
 
 # 5. Representación de resultados
 
