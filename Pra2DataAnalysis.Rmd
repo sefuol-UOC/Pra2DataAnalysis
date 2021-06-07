@@ -1,15 +1,62 @@
 ---
-title: "Pra2DataAnalysis"
-author: "Author"
-date: "5/6/2021"
-output: html_document
+title: 'PRA2 - Tipología y ciclo de vida de los datos: Limpieza y análisis de datos'
+author: "Sergio Funes, David Ortiz"
+date: "Junio de 2021"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+  html_document:
+    toc: yes
+    toc_depth: '2'
+    df_print: paged
+    highlight: default
+    number_sections: no
+    theme: cosmo
+    includes:
+      in_header: PRA_header.html
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(eval=T, echo=T)
 ```
 
-## Limpieza de los datos
+```{r, include=FALSE}
+library(VIM)
+```
+
+# 1. Descripción del dataset
+
+Dataset recruitment data [en Kaggle](https://www.kaggle.com/rafunlearnhub/recruitment-data).
+
+614 filas, 11 atributos originales:
+
+* **Número de serie**. Número del registro.
+
+* **Género**. Si el sujeto es hombre o mujer.
+
+* **Experiencia con Python**. Si el sujeto tiene experiencia de programación en Python.
+
+* **Años de experiencia**. Número de años de experiencia del sujeto.
+
+* **Educación**. Si el sujeto es graduado universitario o no.
+
+* **Prácticas**. Si el sujeto ha hecho unas prácticas o no.
+
+* **Puntuación**. Puntuación del sujeto.
+
+* **Salario** (*10e4). Salario del sujeto, en decenas de miles de rupias.
+
+* **Histórico de ofertas**. Si el sujeto ha tenido ofertas laborales.
+
+* **Localización**. Tipo de localización del sujeto en relación con la ciudad: urbana, semiurbana o rural.
+
+* **Estado de contratación**. Si el sujeto fue contratado o no.
+
+¿Importancia del dataset?
+
+
+# 2. Integración y selección de los datos de interés
 
 ```{r}
 data <- read.csv("recruitment_decision_tree.csv", header = TRUE, stringsAsFactors = TRUE)
@@ -20,13 +67,14 @@ head(data)
 sapply(data, function(x) class(x))
 ```
 
-## Selección de los datos de interés
-
 ```{r}
 data <- data[, -(1)]
 ```
 
-## Ceros y elementos vacíos
+
+# 3. Limpieza de los datos
+
+## 3.1. Ceros y elementos vacíos
 
 ```{r}
 sapply(data, function(x) sum(is.na(x)))
@@ -42,12 +90,13 @@ data$Offer_History <- kNN(data)$Offer_History
 sapply(data, function(x) sum(is.na(x)))
 ```
 
-## Valores extremos
+## 3.2. Valores extremos
 
 ```{r}
 boxplot(data$Score)
 boxplot.stats(data$Score)$out
 ```
+
 ```{r}
 data$Score[data$Score > 23000] <- NA
 
@@ -69,8 +118,78 @@ data$Salary...10E4 <- kNN(data)$Salary...10E4
 boxplot(data$Salary...10E4)
 ```
 
-## Exportación de los datos preprocesados
+## 3.3. Exportación de los datos preprocesados
 
 ```{r}
 write.csv(data, "recruitment_decision_tree_clean.csv")
 ```
+
+
+# 4. Análisis de los datos
+
+## 4.1. Selección de datos
+
+Pasamos a la selección de las variables de interés para su análisis estadístico posterior. Encontramos aquí las variables categóricas más relevantes.
+
+```{r}
+# Per gender
+data.women <- data[data$Gender == "Female", ]
+data.men <- data[data$Gender == "Male", ]
+
+# Per location type
+data.urban <- data[data$Location == "Urban", ]
+data.semiurban <- data[data$Location == "Semiurban", ]
+data.rural <- data[data$Location == "Rural", ]
+
+# Per education level
+data.graduated <- data[data$Education == "Graduate", ]
+data.not_graduated <- data[data$Education == "Not Graduate", ]
+
+# Target var: recruitment status
+data.recruited <- data[data$Recruitment_Status == "Y", ]
+data.not_recruited <- data[data$Recruitment_Status == "N", ]
+```
+
+## 4.2. Comprobación de normalidad y homogeneidad de la varianza
+
+Se comprueba ahora la normalidad de las variables cuantitativas, mediante el test de normalidad de Anderson-Darling. Si el p-valor de es superior al nivel de significancia de $\alpha = 0,05$, entonces podemos concluir que la variable en cuestión es normal.
+
+```{r}
+library(nortest)
+
+num_vars = c("Experience_Years", "Score", "Salary...10E4")
+alpha = 0.05
+
+for (col in num_vars){
+  p_value = ad.test(data[, col])$p.value
+  if (p_value > alpha){
+    print(paste0(col, ": Normal (p = ", p_value, ")"))
+  } else {
+    print(paste0(col, ": Not normal (p = ", p_value, ")"))
+  }
+}
+```
+
+Por tanto vemos que las tres variables numéricas siguen una distribución no normal.
+
+Para estudiar la homogeneidad de las varianzas aplicamos el test de Fligner-Killeen. Se pretende comprobar esta en la relación del género de los candidatos con el salario asociado a estos. Para este test, la hipótesis nula, $H_0$, sostiene la igualdad de varianzas para ambos grupos. Por su parte, $H_1$ supondría varianzas diferentes.
+
+Si el p-valor es superior a un nivel de significancia del 0,05, se aceptará dicha hipótesis nula y por tanto la igualdad de varianzas.
+
+```{r}
+fligner.test(Salary...10E4 ~ Gender, data=data)
+```
+
+Puesto que el p-valor es mayor a 0,05, se acepta la hipótesis nula y por tanto se asume la igualdad de varianzas para ambas muestras.
+
+
+## 4.3. Pruebas estadísticas
+
+
+# 5. Representación de resultados
+
+
+# 6. Resolución y conclusiones
+
+
+# 7. Código
