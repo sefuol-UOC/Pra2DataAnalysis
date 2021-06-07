@@ -28,7 +28,7 @@ library(ggplot2)
 
 # 1. Descripción del dataset y problema de interés
 
-El conjunto de datos es el 'Dataset recruitment data', disponible en el repositorio [en Kaggle](https://www.kaggle.com/rafunlearnhub/recruitment-data). Está formado por 11 características para un total de 614 personas, en un conjunto de datos que refleja el estado de contratación. Este conjunto de datos es interesante puesto que permite identificar las relaciones más directas con un proceso de contratación satisfactorio, lo que puede permitir actuar para mejorar las posibilidades de contratación, o simplemente para detectar relaciones entre distintos usuarios tipo y variables tan relevantes como el salario.
+El conjunto de datos es el 'Dataset recruitment data', disponible en el repositorio [Kaggle](https://www.kaggle.com/rafunlearnhub/recruitment-data). Está formado por 11 características para un total de 614 personas, en un conjunto de datos que refleja el estado de contratación. Este conjunto de datos es interesante puesto que permite identificar las relaciones más directas con un proceso de contratación satisfactorio, lo que puede permitir actuar para mejorar las posibilidades de contratación, o simplemente para detectar relaciones entre distintos usuarios tipo y variables tan relevantes como el salario.
 
 Las características de las que dispone el conjunto de datos son las siguientes:
 
@@ -71,7 +71,7 @@ Asímismo, durante la realización de esta práctica nos proponemos dar respuest
 Realizamos una lectura de los datos:
 
 ```{r}
-data <- read.csv("recruitment_decision_tree.csv", header = TRUE, stringsAsFactors = TRUE, na.strings = "")
+data <- read.csv("../data/recruitment_decision_tree.csv", header = TRUE, stringsAsFactors = TRUE, na.strings = "")
 head(data)
 ```
 
@@ -154,7 +154,7 @@ En la variable Salary...10E4, hemos realizado el mismo proceso que en la variabl
 Después de leer y validar el conjunto de datos, limpieza de los elementos vacíos y extremos, procedemos a guardar los datos en un fichero denominado "recruitment_decision_tree_clean.csv":
 
 ```{r}
-write.csv(data, "recruitment_decision_tree_clean.csv")
+write.csv(data, "../data/recruitment_decision_tree_clean.csv")
 ```
 
 
@@ -334,13 +334,8 @@ abline(MLatin, col = "red")
 Como puede verse en la gráfica anterior, existe una relación entre el Score que recibe un candidato y su salario. Cuando mayor es el Score mayor suele ser su salario.
 
 ```{r}
-
-#mean(data$Salary...10E4[data$Gender=="Male"]) mean(data$Salary...10E4[data$Gender=="Female"])
-
-
 ggplot( data, aes(x=Gender, y=Salary...10E4, fill=Gender)) +
-geom_bar(width=1,stat="summary", fun.y="mean")
-
+geom_bar(width=1,stat="summary")
 ```
 
 Según el gráfico de barras, puede verse que el salario medio de los hombres es superior al de las mujeres en el momento de contratación.
