@@ -27,9 +27,7 @@ library(VIM)
 
 # 1. Descripción del dataset
 
-Dataset recruitment data [en Kaggle](https://www.kaggle.com/rafunlearnhub/recruitment-data).
-
-614 filas, 11 atributos originales:
+El conjunto de datos es Dataset recruitment data [en Kaggle](https://www.kaggle.com/rafunlearnhub/recruitment-data). Está formado por 11 características que presentan 614 personas. Las características son las siguientes:
 
 * **Número de serie**. Número del registro.
 
@@ -53,10 +51,14 @@ Dataset recruitment data [en Kaggle](https://www.kaggle.com/rafunlearnhub/recrui
 
 * **Estado de contratación**. Si el sujeto fue contratado o no.
 
-¿Importancia del dataset?
+A partir de este conjunto de datos, se pretende determinar que variables influyen más a la hora de decidir si un candidato es contratado o no. Además, se podrán crear modelos predictivos para predecir la decisión final.
+
+Este análisis adquiere importancia a la hora de reclutar nuevos empleados en una empresa principalmente de informática, ya que a partir de su experiencia de programación, su educación y su experiencia, tendremos una primera aproximación sobre si un empleado será contratado o no.
 
 
 # 2. Integración y selección de los datos de interés
+
+Realizamos una lectura de los datos:
 
 ```{r}
 data <- read.csv("recruitment_decision_tree.csv", header = TRUE, stringsAsFactors = TRUE)
@@ -67,6 +69,8 @@ head(data)
 sapply(data, function(x) class(x))
 ```
 
+Observamos que los tipos de datos asignados son los correctos. A continuación, podemos prescindir de la variable Serial_no, ya que no nos aporta información sobre el candidato, únicamente representa que número de candidato es.
+
 ```{r}
 data <- data[, -(1)]
 ```
@@ -76,9 +80,13 @@ data <- data[, -(1)]
 
 ## 3.1. Ceros y elementos vacíos
 
+Comprobamos si nuestro conjunto de datos contiene elementos vacíos:
+
 ```{r}
 sapply(data, function(x) sum(is.na(x)))
 ```
+
+Podemos observar que hay 86 elementos vacíos entre las variables Experience_Years, Salary...10E4 y Offer_History. Procederemos a emplear un método de imputación de valores basada en k vecinos más próximos. Utilizaremos la función kNN de la libreria VIM:
 
 ```{r}
 suppressWarnings(suppressMessages(library(VIM)))
@@ -90,12 +98,18 @@ data$Offer_History <- kNN(data)$Offer_History
 sapply(data, function(x) sum(is.na(x)))
 ```
 
+Después de la imputación de valores, podemos comprobar que ya no existen valores vacíos en nuestro conjunto de datos.
+
 ## 3.2. Valores extremos
+
+Identificaremos los valores outliers de dos formas diferentes, utilizando un diagrama de caja y utilizando la función boxplots.stats() de R. Representaremos los datos de las variables numéricas Score y Salary...10E4. Primeramente representaremos la variable Score:
 
 ```{r}
 boxplot(data$Score)
 boxplot.stats(data$Score)$out
 ```
+
+Podemos observar que la variable Score contiene muchos outliers. En este caso, podemos deshacernos de los valores más lejanos, ya que aunque haya valores fuera del rango, no podemos asumir que sean outliers y no personas altamente cualificadas para ser contratadas. Para deshacernos de los outliers, le daremos valor vacío a partir de cierto rango y después utilizaremos la función kNN nuevamente para la imputación de los valores:
 
 ```{r}
 data$Score[data$Score > 23000] <- NA
@@ -104,6 +118,8 @@ data$Score <- kNN(data)$Score
 
 boxplot(data$Score)
 ```
+
+Puede observarse que han desaparecido los outliers más lejanos. Continuaremos con la variable Salary...10E4:
 
 ```{r}
 boxplot(data$Salary...10E4)
@@ -118,7 +134,11 @@ data$Salary...10E4 <- kNN(data)$Salary...10E4
 boxplot(data$Salary...10E4)
 ```
 
+En la variable Salary...10E4, hemos realizado el mismo proceso que en la variable anterior.
+
 ## 3.3. Exportación de los datos preprocesados
+
+Después de leer y validar el conjunto de datos, limpieza de los elementos vacíos y extremos, procedemos a guardar los datos en un fichero denominado "recruitment_decision_tree_clean.csv":
 
 ```{r}
 write.csv(data, "recruitment_decision_tree_clean.csv")
