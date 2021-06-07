@@ -10,6 +10,9 @@ The activity has been carried out jointly by **Sergio Funes Olaria** and **David
 
 ## Source code files
 
+* **src/Pra2DataAnalysis.Rmd**: Code in R Markdown format to generate the pdf file with the clean-up and analysis.
+* **data/recruitment_decision_tree.csv**: Initial dataset.
+* **data/recruitment_decision_tree_clean.csv**: Clean dataset.
 
 ## Resources
 
