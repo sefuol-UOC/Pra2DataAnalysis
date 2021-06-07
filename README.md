@@ -13,4 +13,4 @@ The activity has been carried out jointly by **Sergio Funes Olaria** and **David
 
 ## Resources
 
-1. Lal Kshetry, ROHAN (2021). Recruitment data | Kaggle. Available from: https://www.kaggle.com/rafunlearnhub/recruitment-data
+1. _Recruitment data | Kaggle_ [online]. [cited 2021-07-06]. Avalable from: https://www.kaggle.com/rafunlearnhub/recruitment-data
