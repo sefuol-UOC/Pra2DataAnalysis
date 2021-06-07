@@ -3,9 +3,6 @@ title: 'PRA2 - Tipología y ciclo de vida de los datos: Limpieza y análisis de 
 author: "Sergio Funes, David Ortiz"
 date: "Junio de 2021"
 output:
-  pdf_document:
-    toc: yes
-    toc_depth: '2'
   html_document:
     toc: yes
     toc_depth: '2'
@@ -15,6 +12,9 @@ output:
     theme: cosmo
     includes:
       in_header: PRA_header.html
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
 ---
 
 ```{r setup, include=FALSE}
@@ -177,8 +177,8 @@ Se comprueba ahora la normalidad de las variables cuantitativas, mediante el tes
 ```{r}
 library(nortest)
 
-num_vars = c("Experience_Years", "Score", "Salary...10E4")
-alpha = 0.05
+num_vars <- c("Experience_Years", "Score", "Salary...10E4")
+alpha <- 0.05
 
 for (col in num_vars){
   p_value = ad.test(data[, col])$p.value
@@ -194,9 +194,10 @@ Por tanto vemos que las tres variables numéricas siguen una distribución no no
 
 Para estudiar la homogeneidad de las varianzas aplicamos el test de Fligner-Killeen. Se pretende comprobar esta en la relación del género de los candidatos con el salario asociado a estos. Para este test, la hipótesis nula, $H_0$, sostiene la igualdad de varianzas para ambos grupos. Por su parte, $H_1$ supondría varianzas diferentes.
 
-Si el p-valor es superior a un nivel de significancia del 0,05, se aceptará dicha hipótesis nula y por tanto la igualdad de varianzas.
+Si el p-valor es superior a un nivel de significancia del 0,05, se aceptará dicha hipótesis nula y por tanto la igualdad de varianzas. Aplicamos el test sobre los salarios, una de las variables de interés a estudiar.
 
 ```{r}
+# Salary
 fligner.test(Salary...10E4 ~ Gender, data=data)
 ```
 
@@ -204,6 +205,107 @@ Puesto que el p-valor es mayor a 0,05, se acepta la hipótesis nula y por tanto 
 
 
 ## 4.3. Pruebas estadísticas
+
+Realizamos ahora varios análisis estadísticos que nos permitan responder las preguntas de interés planteadas sobre el conjunto de datos.
+
+### 4.3.1. Correlación de la experiencia y puntuación de los candidatos con el salario
+
+Comprobamos la correlación de la experiencia y puntuación de los candidatos con el salario, con el fin de comprobar en qué medida están asociadas estas métricas con una mayor retribución económica.
+
+```{r}
+# Experience vs salary
+corr_exp_salary = cor(data$Experience_Years, data$Salary...10E4)
+print(paste("Correlation of experience and salary:", round(corr_exp_salary, 3)))
+# Score vs salary
+corr_score_salary = cor(data$Score, data$Salary...10E4)
+print(paste("Correlation of score and salary:", round(corr_score_salary, 3)))
+```
+
+Vemos que la correlación entre la experiencia y el salario es más bien débil para las muestras recogidas en el conjunto de datos, con un valor de `r round(corr_exp_salary, 3)`. No obstante, la puntuación tiene una correlación superior, aunque todavía moderada, de `r round(corr_score_salary, 3)`.
+
+### 4.3.2. Contraste de hipótesis: salario de mujeres y hombres
+
+Se pretende comprobar además si el salario de las mujeres y el de los hombres es diferente. Para ello, realizamos un contraste de hipótesis bilateral definiendo:
+
+* $H_0: \mu_{mujeres} = \mu_{hombres}$
+
+* $H_1: \mu_{mujeres} \ne \mu_{hombres}$
+
+Donde la hipótesis nula, $H_0$, corresponde a la igualdad de salarios, y la hipótesis alternativa $H_1$, corresponde a la desigualdad de estos. Si bien la distribución no es normal, contamos con un buen tamaño muestral muy superior a 30, por lo que el teorema del límite central nos permite realizar test estadístico sobre la media asumiendo la normalidad de esta.
+
+```{r}
+t.test(data.women$Salary...10E4, data.men$Salary...10E4,
+       alternative="two.sided", conf.level=0.95)
+```
+
+Al obtener un `p-valor` inferior a 0.05, el valor de significancia para un nivel de confianza del 95%, rechazamos la hipótesis nula. Por tanto, podemos afirmar que los salarios de mujeres y hombres son diferentes.
+
+Para concretar más, podemos aplicar una hipótesis unilateral que verifique si efectivamente y como se puede sospechar, los sueldos de las mujeres son inferiores a los de los hombres. Para ello, definimos ahora las hipótesis:
+
+* $H_0: \mu_{mujeres} = \mu_{hombres}$
+
+* $H_1: \mu_{mujeres} < \mu_{hombres}$
+
+En este caso la hipótesis alternativa, $H_1$, corresponde al supuesto en el que las mujeres tienen un salario medio inferior al de los hombres. Realizamos el test estadístico.
+
+```{r}
+t.test(data.women$Salary...10E4, data.men$Salary...10E4,
+       alternative="less", conf.level=0.95)
+```
+
+En este caso vemos, de nuevo, como el `p-valor` es inferior al nivel de significancia adoptado, por lo que se rechaza la hipótesis nula y se concluye que, la media de los salarios de las mujeres es inferior al de los hombres con una confianza del 95%.
+
+### 4.3.3. Regresión logística
+
+Puesto que buena parte de las variables con las que contamos son de tipo categórico, podemos comprobar la relación entre estas y si finalmente el candidato fue contratado o no.
+
+Podemos comprobar si existe relación entre algunas variables y la variable objetivo mediante el test $\chi^2$ de Pearson.
+
+```{r}
+# Get relation for all variables
+data.colnames <- colnames(data[, -(10)])
+alpha <- 0.05
+print("Checking against Recruitment_Status:")
+for (col in data.colnames){
+  p_value <- chisq.test(table(data$Recruitment_Status, data[, col]),
+                        simulate.p.value=TRUE)$p.value
+  p_value <- round(p_value, 4)
+  if (p_value > 0.05){
+    print(paste0(col, ": not related (p = ", p_value, ")"))
+  } else {
+    print(paste0(col, ": related (p = ", p_value, ")"))
+  }
+}
+```
+
+Vemos que las variables que mantienen relación con la contratación son, según dicho test la educación, el historial de ofertas y la localización. Asimismo, vemos que la experiencia con Python es marginalmente relevante, por lo que la añadimos por la información que pueda aportar al modelo. Reajustamos las referencias de estas variables, con el estado más bajo (no graduado, sin ofertas previas, localización rural y sin experiencia en Python) como tal.
+
+```{r}
+# Relevel related variables
+data$Education_R <- relevel(data$Education, ref="Not Graduate")
+data$Offer_History_R <- relevel(as.factor(data$Offer_History), ref="0")
+data$Location_R <- relevel(data$Location, ref="Rural")
+data$Python_exp_R <- relevel(data$Python_exp, ref="No")
+
+# Logistic regression
+logistic_formula <- Recruitment_Status ~ Education_R + Offer_History_R + Location_R + Python_exp_R
+logistic_model <- glm(formula=logistic_formula, data=data,
+                      family=binomial(link = 'logit'))
+
+summary(logistic_model)
+```
+
+Vemos qu
+
+```{r}
+length(data$Gender[data$Gender == ""])
+length(data$Python_exp[data$Python_exp == ""])
+length(data$Internship[data$Internship == ""])
+```
+
+```{r}
+python()
+```
 
 
 # 5. Representación de resultados
