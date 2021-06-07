@@ -3,9 +3,6 @@ title: 'PRA2 - Tipología y ciclo de vida de los datos: Limpieza y análisis de 
 author: "Sergio Funes, David Ortiz"
 date: "Junio de 2021"
 output:
-  pdf_document:
-    toc: yes
-    toc_depth: '2'
   html_document:
     toc: yes
     toc_depth: '2'
@@ -15,6 +12,9 @@ output:
     theme: cosmo
     includes:
       in_header: PRA_header.html
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
 ---
 
 ```{r setup, include=FALSE}
@@ -23,6 +23,7 @@ knitr::opts_chunk$set(eval=T, echo=T)
 
 ```{r, include=FALSE}
 library(VIM)
+library(ggplot2)
 ```
 
 # 1. Descripción del dataset y problema de interés
@@ -321,6 +322,27 @@ Es interesante tener en cuenta que, tal y como se indicó en la descripción del
 
 # 5. Representación de resultados
 
+Haremos una representación de los resultados para responder a varias de las preguntas planteadas inicialmente.
+
+```{r}
+plot(Salary...10E4 ~ Score, data = data, xlab = "Score", ylab = "Salary...10E4", main="Score vs Salary...10E4")
+MLatin <- lm(Salary...10E4 ~ Score, data = data)
+abline(MLatin, col = "red")
+```
+
+Como puede verse en la gráfica anterior, exite una relación entre el Score que recibe un candidate y su salario. Cuando mayor es el Score mayor suele ser su salario.
+
+```{r}
+
+#mean(data$Salary...10E4[data$Gender=="Male"]) mean(data$Salary...10E4[data$Gender=="Female"])
+
+
+ggplot( data, aes(x=Gender, y=Salary...10E4, fill=Gender)) +
+geom_bar(width=1,stat="summary", fun.y="mean")
+
+```
+
+Según el gráfico de barras, puede verse que el salario medio de los hombres es superior al de las mujeres en el momento de contratación.
 
 # 6. Resolución y conclusiones
 
