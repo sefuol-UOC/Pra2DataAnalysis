@@ -324,9 +324,23 @@ Es interesante tener en cuenta que, tal y como se indicó en la descripción del
 
 # 6. Resolución y conclusiones
 
+En esta práctica se ha preparado y analizado un conjunto de datos, completando el ciclo de vida de un proyecto datos. Para ello, se ha partido de la exploración de un repositorio público, Kaggle, donde se ha localizado un conjunto de datos interesante e imperfecto.
+
+Seleccionados los datos de relevancia e interés, se ha procedido a limpiar este conjunto de datos de elementos indeseados como ceros, elementos vacíos y ausentes, realizando imputación de valores utilizando modelos de minería de datos como *k-Nearest Neighbors*. Hecho esto, se han identificado y tratado los valores extremos.
+
+A continuación, se ha realizado el análisis de datos propiamente, comenzando por la preselección de los datos categóricos a utilizar y la comprobación de normalidad y homogeneidad de varianza para los datos numéricos. Habiendo realizado dichas tareas de acondicionamiento, se ha exportado la versión preprocesada de los datos al fichero `recruitment_decision_tree_clean.csv`.
+
+Se han aplicado tres métodos de análisis de datos diferentes, con los que se ha podido responder a las preguntas de interés planteadas. Hemos visto que sí hay correlación entre la experiencia del usuario y la puntuación otorgada a cada uno de ellos y el salario que consigue, aunque estas han resultado ser baja o moderada.
+
+Asimismo, se ha determinado mediante contrastes de hipótesis que efectivamente, las mujeres no solo cobran distinto a los hombres sino que el salario de estas es inferior, con nivel de confianza del 95%.
+
+También se han determinado las características cualitativas más relevantes para la contratación, en el marco del conjunto de datos analizado. Se ha visto que la experiencia en Python es algo relevante, actuando como factor de protección respecto a esta (descendiendo la probabilidad de contratación en hasta un 43% respecto a quienes no cuentan con ella). Más relevante es la localización, que en el caso de ser de tipo semiurbana cuenta multiplica la probabilidad de contratación por 2,5. No obstante, el factor más importante es claramente contar con un historial de ofertas de empleo, el cual multiplica por 55 la probabilidad de contratación respecto a quienes no cuentan con él.
+
+Finalmente se han representado gráficamente algunos de los resultados obtenidos, facilitando la comprensión y asimilación de las relaciones observadas. Estas son las asociadas al salario respecto a características como la puntuación del candidato, así como la comparación de los salarios de las mujeres frente a los de los hombres.
 
 # 7. Código
 
+El contenido de esta práctica se encuentra disponible en el repositorio [Pra2DataAnalysis en GitHub](https://github.com/sfunesolaria/Pra2DataAnalysis), donde podemos encontrar el código en R utilizado para la realización de la misma en formato .Rmd, así como versiones en formato .pdf y .html del presente documento. En este repositorio encontramos además el *dataset* original, `recruitment_decision_tree.csv`, así como el conjunto de datos final tras realizar su limpieza, `recruitment_decision_tree_clean.csv`.
 
 ```{r table-simple, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 require(pander)
