@@ -61,7 +61,7 @@ Este análisis adquiere importancia a la hora de reclutar nuevos empleados en un
 Realizamos una lectura de los datos:
 
 ```{r}
-data <- read.csv("recruitment_decision_tree.csv", header = TRUE, stringsAsFactors = TRUE)
+data <- read.csv("recruitment_decision_tree.csv", header = TRUE, stringsAsFactors = TRUE, na.strings = "")
 head(data)
 ```
 
@@ -86,12 +86,15 @@ Comprobamos si nuestro conjunto de datos contiene elementos vacíos:
 sapply(data, function(x) sum(is.na(x)))
 ```
 
-Podemos observar que hay 86 elementos vacíos entre las variables Experience_Years, Salary...10E4 y Offer_History. Procederemos a emplear un método de imputación de valores basada en k vecinos más próximos. Utilizaremos la función kNN de la libreria VIM:
+Podemos observar que hay 134 elementos vacíos entre las variables Gender, Python_exp, Experience_Years, Internship, Salary...10E4 y Offer_History. Procederemos a emplear un método de imputación de valores basada en k vecinos más próximos. Utilizaremos la función kNN de la libreria VIM:
 
 ```{r}
 suppressWarnings(suppressMessages(library(VIM)))
 
+data$Gender <- kNN(data)$Gender
+data$Python_exp <- kNN(data)$Python_exp
 data$Experience_Years <- kNN(data)$Experience_Years
+data$Internship <- kNN(data)$Internship
 data$Salary...10E4 <- kNN(data)$Salary...10E4
 data$Offer_History <- kNN(data)$Offer_History
 
@@ -293,14 +296,6 @@ logistic_model <- glm(formula=logistic_formula, data=data,
                       family=binomial(link = 'logit'))
 
 summary(logistic_model)
-```
-
-Vemos qu
-
-```{r}
-length(data$Gender[data$Gender == ""])
-length(data$Python_exp[data$Python_exp == ""])
-length(data$Internship[data$Internship == ""])
 ```
 
 ```{r}
